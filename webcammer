@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown with Webcam</title>
+</head>
+<body>
+    <div id="countdown" style="font-size: 100px; font-weight: bold; color: red; text-align: center;"></div>
+    <video id="webcam" style="display: none; width: 100%; height: auto;" autoplay></video>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var countdownTime = 47;
+
+            var x = setInterval(function() {
+                document.getElementById("countdown").innerHTML = countdownTime;
+                countdownTime--;
+
+                if (countdownTime < 0) {
+                    clearInterval(x);
+                    document.getElementById("countdown").innerHTML = "EXPIRED";
+                    setTimeout(function() {
+                        startWebcam();
+                    }, 3000);
+                }
+            }, 1000);
+
+            function startWebcam() {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        var videoElement = document.getElementById('webcam');
+                        videoElement.style.display = 'block';
+                        videoElement.srcObject = stream;
+                    })
+                    .catch(function(error) {
+                        console.error('Error accessing webcam: ', error);
+                        alert("Error: Unable to access the webcam. Please check your permissions.");
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
